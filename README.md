@@ -7,7 +7,7 @@ It's made by Denis Perevalov (first versions were made with [Kuflex](http://kufl
 
 ## Directory contents
 
-	KuStudio - main folder with KuStudio
+	KuStudio - main folder with KuStudio, see its Readme for the further details
 	DemoProject - Test project, you can start learning KuStudio 
 	              by loading this project
 	OSC-Demo-oF - Test visualizer, for using with DemoProject
