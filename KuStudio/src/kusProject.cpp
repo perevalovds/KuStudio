@@ -248,7 +248,7 @@ bool kusProject::importRawText() {
 
 	ofSystemAlertDialog("Importing text file.\nFirst line will be treated as a header,"
 		"and next lines means tracks values, separated by TAB,"
-		" at rate " + ofToString(kusTrack::tracks_rate()) + "fps .");
+		" at rate " + ofToString(kusTrack::tracks_rate()) + " fps.");
 	ofFileDialogResult res = ofSystemLoadDialog("Import tracks from text file, frame rate " + ofToString(kusTrack::tracks_rate())
 		+ "...");
 	if (res.bSuccess) {
@@ -433,6 +433,15 @@ void kusProject::requestSendTracksValues() {
     requestSendValue_ = true;
 }
 
+//---------------------------------------------------------------------
+void kusProject::setVolume(float v) {
+	audio.setVolume(v);
+}
+
+//---------------------------------------------------------------------
+void kusProject::setSpeed(float v) {
+	audio.setSpeed(v);
+}
 
 //---------------------------------------------------------------------
 void kusProject::playAll() {

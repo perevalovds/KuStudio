@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.72)";
+string PRODUCT_NAME = "KuStudio (1.74)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -18,7 +18,7 @@ kuButton *b_playall, *b_play, *b_stop;
 kuButton *b_edit, *b_edit_line;
 kuButton *b_record;
 
-int buttonX = 300;
+int buttonX = 350;
 int buttonY = 10;
 int timeTextX = buttonX + 140;
 int buttonX2 = timeTextX + 110;
@@ -72,6 +72,18 @@ void ofApp::setup() {
 
 	menu.addItem("trDelete", "Delete track...", "tr");
 	menu.addItem("trEdit", "(For track drawing choose it and press Z)", "tr");
+
+	menu.addSubmenu("snd", "Sound");
+	menu.addItem("sndVolMute", "Mute", "snd");
+	menu.addItem("sndVol10", "Volume 10%", "snd");
+	menu.addItem("sndVol25", "Volume 25%", "snd");
+	menu.addItem("sndVol50", "Volume 50%", "snd");
+	menu.addItem("sndVol75", "Volume 75%", "snd");
+	menu.addItem("sndVol100", "Volume 100%", "snd");
+	menu.addItem("sndSpeed25", "Speed 25%", "snd");
+	menu.addItem("sndSpeed33", "Speed 33%", "snd");
+	menu.addItem("sndSpeed50", "Speed 50%", "snd");
+	menu.addItem("sndSpeed100", "Speed 100%", "snd");
 
 	menu.addSubmenu("sett", "Settings");
 	menu.addItem("settOscOut1", "OSC out 1", "sett");
@@ -237,6 +249,18 @@ void ofApp::processMenu(string cmd) {
 	if (cmd == "trType") { project.editTrackType(); }
 	if (cmd == "trDelete") { project.deleteTrack(); }
 
+	if (cmd == "sndVolMute") { project.setVolume(0); }
+	if (cmd == "sndVol10") { project.setVolume(0.10); }
+	if (cmd == "sndVol25") { project.setVolume(0.25); }
+	if (cmd == "sndVol50") { project.setVolume(0.5); }
+	if (cmd == "sndVol75") { project.setVolume(0.75); }
+	if (cmd == "sndVol100") { project.setVolume(1.0); }
+
+	if (cmd == "sndSpeed25") { project.setSpeed(0.25); }
+	if (cmd == "sndSpeed33") { project.setSpeed(0.33); }
+	if (cmd == "sndSpeed50") { project.setSpeed(0.5); }
+	if (cmd == "sndSpeed100") { project.setSpeed(1.0); }
+	
 	if (cmd == "settOscOut1") { project.editOscOut(0); }
 	if (cmd == "settOscOut2") { project.editOscOut(1); }
 	if (cmd == "settOscOut3") { project.editOscOut(2); }

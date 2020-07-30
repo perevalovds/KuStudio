@@ -45,6 +45,9 @@ public:
     float time() { return time_; }
     string timeString();
     
+	void setVolume(float v);
+	void setSpeed(float v);
+
     void playAll();
     void playSegment();
     void stop();
