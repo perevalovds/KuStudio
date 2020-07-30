@@ -245,28 +245,29 @@ bool kusProject::exportRawText() {
 bool kusProject::importRawText() {
 	//импортировать значения треков из текстового файла, с разделением TAB, первая строка - игнорируется
 	//если треков больше - другие игнорируются, если данных больше - обрезаются, если меньше - остаются старые на том месте
+
+	ofSystemAlertDialog("Importing text file.\nFirst line will be treated as a header,"
+		"and next lines means tracks values, separated by TAB,"
+		"at rate " + ofToString(kusTrack::tracks_rate()) + "fps .");
 	ofFileDialogResult res = ofSystemLoadDialog("Import tracks from text file, frame rate " + ofToString(kusTrack::tracks_rate())
 		+ "...");
 	if (res.bSuccess) {
+
 		string fileName = res.filePath;
 
-		vector<string> file;
-		int m = tracks.size();
-		if (m == 0) return false; //нет треков
-		string s;
-		for (int i = 0; i < m; i++) {
-			if (i > 0) s += "\t";
-			s += tracks[i].name();
-		}
-		file.push_back(s);
-		int n = tracks[0].getDataRef().size();
+		vector<string> file = pbFiles::readStrings(fileName);
+		int header = 1;
+		int n = int(file.size()) - header;
 		for (int k = 0; k < n; k++) {
-			string s;
+			string &line = file[k + header];
+			vector<string> items = ofSplitString(line, "\t");
+			int m = min(tracks.size(), items.size());
 			for (int i = 0; i < m; i++) {
-				if (i > 0) s += "\t";
-				s += ofToString(tracks[i].getDataRef()[k]);
+				auto &data = tracks[i].getDataRef();
+				if (k < data.size()) {
+					data[k] = ofToFloat(items[i]);
+				}
 			}
-			file.push_back(s);
 		}
 
 		pbFiles::writeStrings(file, fileName);
@@ -678,10 +679,10 @@ string kusProject::timeString() {
 }
 
 //---------------------------------------------------------------------
-void kusProject::addTrack() {
+void kusProject::addTrack(bool is_float) {
     if ( isEmpty() ) { return; }
 
-    string res = systemTextBoxDialog( "Add track", "trackName");
+    string res = systemTextBoxDialog( "Add track", "1");
     if ( res != "" ) {
         string name = res;
         int oscOut = 1;
@@ -696,7 +697,8 @@ void kusProject::addTrack() {
         track.setName( name );
         track.setOscOut( oscOut );
         track.setDuration( duration );
-        tracks.push_back( track );
+		track.setType(is_float ? kusTrack::TYPE_FLOAT : kusTrack::TYPE_INT);
+		tracks.push_back( track );
         
         //ставим трек после редактируемого
         if ( selectedTrack_ >= 0 ) {

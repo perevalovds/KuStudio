@@ -56,7 +56,7 @@ public:
     
     bool isEmpty() { return duration == 0; }
     
-    void addTrack();
+    void addTrack(bool is_float = true);	//float или int
     void editTrackName();
     void editTrackOscOut();
     void editTrackRange();

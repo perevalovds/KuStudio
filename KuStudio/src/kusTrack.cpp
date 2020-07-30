@@ -183,7 +183,7 @@ void kusTrack::setSmoothDialog() {
 
 //---------------------------------------------------------------------
 void kusTrack::setTypeDialog() {
-    string res = systemTextBoxDialog( "'" + name() + "' - Type (float, int)",
+    string res = systemTextBoxDialog( "Type (float, int)",
                                        typeToString( type_ ) );
     if ( res != "" ) {
         setType( stringToType( res ) );
