@@ -8,9 +8,11 @@ static const float TR_EMPTY = 0;  //значение, показывающее �
 class kusTrack
 {
 public:
+	static int tracks_rate() { return 60; } //TODO параметр, частота треков
+
 	void setup();
     void exportRawBinary( string fileName ); //записать как массив float на диск
-    void shift_time_samples( int samples );   //сдвиг влево на заданное число сэмплов
+    void shift_time_frames( int samples );   //сдвиг влево на заданное число кадров
     void shift_time_sec( float sec );   //сдвиг влево на заданное число секунд
     
     void setPos( float x, float y, float w, float h );

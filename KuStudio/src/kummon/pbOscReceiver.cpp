@@ -9,7 +9,7 @@ void pbOscReceiver::setup( int port, bool threaded )
 	oscReceiver.setup( port );
 
 	if ( _threaded ) {
-		startThread( true, false );   //blocking, verbose
+		startThread(true);// , false );   //blocking, verbose
 	}
 
 	count = 0;

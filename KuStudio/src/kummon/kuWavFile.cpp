@@ -46,7 +46,7 @@ kuWavFile::kuWavFile() {
 //---------------------------------------------------------------------
 bool kuWavFile::loadWav( ofSoundPlayer &sound ) {
 
-    vrate_ = 120; //60.0;
+    vrate_ = 120; //60.0; //TODO параметр
     //считывание данных
     ofPtr<ofBaseSoundPlayer> player  = sound.getPlayer();
     

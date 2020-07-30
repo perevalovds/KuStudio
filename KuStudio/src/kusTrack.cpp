@@ -13,7 +13,7 @@ void kusTrack::setup() {
     duration_ = 0;
     n_ = 0;
     
-    rate_ = 60;     //TODO параметр
+	rate_ = tracks_rate(); //60;    
     dirty_ = false;
     
     value_ = 0;
@@ -33,11 +33,11 @@ void kusTrack::setup() {
 
 //---------------------------------------------------------------------
 void kusTrack::shift_time_sec( float sec ) {   //сдвиг влево на заданное число секунд
-    shift_time_samples( sec * rate_ );
+	shift_time_frames( sec * rate_ );
 }
 
 //---------------------------------------------------------------------
-void kusTrack::shift_time_samples( int k ) {   //сдвиг влево на заданное число сэмплов
+void kusTrack::shift_time_frames( int k ) {   //сдвиг влево на заданное число кадров
     if ( k == 0 ) return;
     if ( k < 0 ) {  //влево
         int k1 = -k;

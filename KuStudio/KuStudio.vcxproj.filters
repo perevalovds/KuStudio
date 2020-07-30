@@ -1,6 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -26,9 +29,6 @@
       <Filter>src\kummon</Filter>
     </ClCompile>
     <ClCompile Include="src\kummon\kuNavigator.cpp">
-      <Filter>src\kummon</Filter>
-    </ClCompile>
-    <ClCompile Include="src\kummon\kuObject3D.cpp">
       <Filter>src\kummon</Filter>
     </ClCompile>
     <ClCompile Include="src\kummon\kuOscReceive.cpp">
@@ -82,8 +82,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\testApp.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxNetworkUtils.cpp">
+      <Filter>addons\ofxNetwork\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp">
       <Filter>addons\ofxNetwork\src</Filter>
@@ -197,6 +197,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\kummon\converter.h">
       <Filter>src\kummon</Filter>
     </ClInclude>
@@ -219,9 +222,6 @@
       <Filter>src\kummon</Filter>
     </ClInclude>
     <ClInclude Include="src\kummon\kuNavigator.h">
-      <Filter>src\kummon</Filter>
-    </ClInclude>
-    <ClInclude Include="src\kummon\kuObject3D.h">
       <Filter>src\kummon</Filter>
     </ClInclude>
     <ClInclude Include="src\kummon\kuOscReceive.h">
@@ -272,9 +272,6 @@
     <ClInclude Include="src\kusTrack.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\testApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxNetwork.h">
       <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
@@ -290,7 +287,13 @@
     <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPServer.h">
       <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxTCPSettings.h">
+      <Filter>addons\ofxNetwork\src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxUDPManager.h">
+      <Filter>addons\ofxNetwork\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxNetwork\src\ofxUDPSettings.h">
       <Filter>addons\ofxNetwork\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
@@ -361,6 +364,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="KuStudio\icon.rc" />
+    <ResourceCompile Include="icon.rc" />
   </ItemGroup>
 </Project>

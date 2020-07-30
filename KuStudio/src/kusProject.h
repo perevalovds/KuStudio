@@ -22,9 +22,13 @@ public:
     bool open( string fileName );
     bool openAs();
     bool save( bool saveAs = false, bool forceSave = true );
-    bool exportRawText(); //экспортировать в текстовый файл, с разделением TAB
+    bool exportRawText(); //экспортировать значения треков в текстовый файл, с разделением TAB, первая строка - имена треков
+	bool importRawText(); //импортировать значения треков из текстового файла, с разделением TAB, первая строка - игнорируется
+	//если треков больше - другие игнорируются, если данных больше - обрезаются, если меньше - остаются старые на том месте
+	
+
     void shiftAllTracks_sec(); //сдвинуть все треки во времени, в секундах
-    void shiftAllTracks_samples(); //сдвинуть все треки во времени, в сэмплах
+	void shiftAllTracks_frames(); //сдвинуть все треки во времени, в кадрах
     
     bool openAudioAs();
     

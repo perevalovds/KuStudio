@@ -180,13 +180,13 @@ bool kusProject::save( bool saveAs, bool forceSave ) {
 }
 
 //---------------------------------------------------------------------
-void kusProject::shiftAllTracks_samples() { //сдвинуть все треки влево в сэмплах
+void kusProject::shiftAllTracks_frames() { //сдвинуть все треки влево в сэмплах
     string sec = systemTextBoxDialog("Shift all tracks by time (samples)", "0" );
     if ( sec != "" ) {
         int v = ofToInt(sec);
         if ( v != 0 ) {
             for (int i=0; i<tracks.size(); i++) {
-                tracks[i].shift_time_samples(v);
+                tracks[i].shift_time_frames(v);
             }
             tracksSetDirty();
         }
@@ -210,7 +210,8 @@ void kusProject::shiftAllTracks_sec() { //сдвинуть все треки в�
 //---------------------------------------------------------------------
 //экспортировать в текстовый файл, с разделением TAB
 bool kusProject::exportRawText() {
-    ofFileDialogResult res = ofSystemSaveDialog( "tracks.txt", "Export tract to text file...");
+    ofFileDialogResult res = ofSystemSaveDialog( "tracks.txt", "Export tracks to text file, frame rate " + ofToString(kusTrack::tracks_rate())
+		+ "...");
     if ( res.bSuccess ) {
         string fileName = res.filePath;
         
@@ -240,6 +241,41 @@ bool kusProject::exportRawText() {
     return false;
 }
 
+//---------------------------------------------------------------------
+bool kusProject::importRawText() {
+	//импортировать значения треков из текстового файла, с разделением TAB, первая строка - игнорируется
+	//если треков больше - другие игнорируются, если данных больше - обрезаются, если меньше - остаются старые на том месте
+	ofFileDialogResult res = ofSystemLoadDialog("Import tracks from text file, frame rate " + ofToString(kusTrack::tracks_rate())
+		+ "...");
+	if (res.bSuccess) {
+		string fileName = res.filePath;
+
+		vector<string> file;
+		int m = tracks.size();
+		if (m == 0) return false; //нет треков
+		string s;
+		for (int i = 0; i < m; i++) {
+			if (i > 0) s += "\t";
+			s += tracks[i].name();
+		}
+		file.push_back(s);
+		int n = tracks[0].getDataRef().size();
+		for (int k = 0; k < n; k++) {
+			string s;
+			for (int i = 0; i < m; i++) {
+				if (i > 0) s += "\t";
+				s += ofToString(tracks[i].getDataRef()[k]);
+			}
+			file.push_back(s);
+		}
+
+		pbFiles::writeStrings(file, fileName);
+		return true;
+	}
+
+	return false;
+
+}
 
 //---------------------------------------------------------------------
 bool kusProject::open( string fileName ) {

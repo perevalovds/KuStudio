@@ -1,4 +1,4 @@
-﻿#include "testApp.h"
+﻿#include "ofApp.h"
 
 #include "kuMenu.h"
 #include "kusProject.h"
@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.71)";
+string PRODUCT_NAME = "KuStudio (1.72)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -30,7 +30,7 @@ kusProject project;
 ofTrueTypeFont font2;
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
 	console_hide();	//Hide console in Windows
 
     ofSetWindowTitle( PRODUCT_NAME );
@@ -55,9 +55,10 @@ void testApp::setup(){
 	menu.addItem( "projSaveAs", "Save As...", "proj" );
 	//menu.addItem( "projDuration", "Set duration...", "proj" );
 	menu.addItem( "projAudio", "Set audio track...", "proj" );
-	menu.addItem( "projExportText", "Export as text...", "proj" );
+	menu.addItem( "projExportText", "Export as text file...", "proj" );
+	menu.addItem("projImportText", "Import text file...", "proj");
 	menu.addItem( "projShiftAllTracks_sec", "Shift all tracks, seconds...", "proj" );
-	menu.addItem( "projShiftAllTracks_samples", "Shift all tracks, samples...", "proj" );
+	menu.addItem("projShiftAllTracks_frames", "Shift all tracks, frames...", "proj");
         
 	menu.addItem( "projQuitNoSave", "Quit without saving", "proj" );
 	menu.addSubmenu( "tr", "Track" );
@@ -69,7 +70,7 @@ void testApp::setup(){
 	menu.addItem( "trType", "Type...", "tr" );
     
 	menu.addItem( "trDelete", "Delete track...", "tr" );
-	menu.addItem( "trEdit", "(For track drawing press Z)", "tr" );
+	menu.addItem( "trEdit", "(For track drawing choose it and press Z)", "tr" );
     
     menu.addSubmenu( "sett", "Settings" );
 	menu.addItem( "settOscOut1", "OSC out 1", "sett" );
@@ -77,6 +78,7 @@ void testApp::setup(){
 	menu.addItem( "settOscOut3", "OSC out 3", "sett" );
 	menu.addItem( "settOscOut4", "OSC out 4", "sett" );
 	menu.addItem( "settOscIn", "OSC in", "sett" );
+	menu.addItem("trRate", "(Tracks frame rate: " + ofToString(kusTrack::tracks_rate()) + " fps)", "sett");
 
     menu.addSubmenu( "help", "?" );
 	menu.addItem( "help", "Help...", "help" );
@@ -123,7 +125,7 @@ void testApp::setup(){
 }
 
 //--------------------------------------------------------------
-void testApp::resized() {
+void ofApp::resized() {
 	int minSize = 7;
     int w = max( ofGetWidth(), minSize);
     int h = max( ofGetHeight(), minSize);
@@ -133,7 +135,7 @@ void testApp::resized() {
 }
 
 //--------------------------------------------------------------
-void testApp::exit() {
+void ofApp::exit() {
 	cout << "Exiting..." << endl;
     if ( _saveOnExit ) project.save( false, false );
     shared_state.save();
@@ -141,7 +143,7 @@ void testApp::exit() {
 }
 
 //--------------------------------------------------------------
-void testApp::exitWithoutSaving() {
+void ofApp::exitWithoutSaving() {
 	cout << "Exiting without saving..." << endl;
     _saveOnExit = false;
     OF_EXIT_APP( 0 );
@@ -149,7 +151,7 @@ void testApp::exitWithoutSaving() {
 
 //--------------------------------------------------------------
 float time_ = 0;
-void testApp::update(){
+void ofApp::update(){
 	float time = ofGetElapsedTimef();
 	float dt = ofClamp( time - time_, 0.01, 0.1 );
 	time_ = time;
@@ -180,11 +182,11 @@ void testApp::update(){
 //--------------------------------------------------------------
 void help() {
 	ostringstream s;
-	s << "             " << PRODUCT_NAME << " by kuflex" << endl;
+	s << "<<<< " << PRODUCT_NAME << ">>>> by Denis Perevalov" << endl << "(first version was made with kuflex.com)" << endl;
 	s << "How to use:" << endl;
 	s << "1) Set audio track" << endl;
 	s << "      Menu 'Set audio track' - select WAV or AIFF file, 8,16,32-bit," << endl << "         (use latin paths and filename)" << endl;
-	s << "      First sound graph - whole audio track, second - audio fragment." << endl << " Select and drag fragment on the whole track." << endl;
+	s << "      First sound graph - whole audio track, second - audio fragment." << endl << " Select and drag end of fragment (white lines) on the whole track." << endl;
 	s << "      Press SPACE to play/stop segment, " << endl << " ENTER to play all (stop only by pressing Stop button)" << endl;
 	s << "2) Create new tracks" << endl;
 	s << "      Menu 'New track' - set track name, it will be sent by OSC" << endl;
@@ -200,12 +202,13 @@ void help() {
     s << "   openProject (path_to_project)" << endl;
 	s << "5) Kustudio sends by OSC: " << endl;
 	s << "   kustudio:status (scene master_time app_time playAll|playSegm|stop)" << endl;
+	s << "6) About export/import text files: currently track's frame rate is fixed to " << kusTrack::tracks_rate() << " fps" << endl;
 
 	ofSystemAlertDialog( s.str() );
 }
 
 //--------------------------------------------------------------
-void testApp::processMenu( string cmd ) {
+void ofApp::processMenu( string cmd ) {
 	if ( cmd == "" ) return;
     //cout << cmd << endl;
     if ( cmd == "projNew" ) { project.createNew( true ); projectWasUpdated(); }
@@ -213,8 +216,9 @@ void testApp::processMenu( string cmd ) {
     if ( cmd == "projSave" ) project.save( false );
     if ( cmd == "projSaveAs" ) project.save( true );
     if ( cmd == "projExportText" ) project.exportRawText();
-    if ( cmd == "projShiftAllTracks_sec" ) project.shiftAllTracks_sec();
-    if ( cmd == "projShiftAllTracks_samples" ) project.shiftAllTracks_samples();
+	if (cmd == "projImportText") project.importRawText();
+	if ( cmd == "projShiftAllTracks_sec" ) project.shiftAllTracks_sec();
+    if ( cmd == "projShiftAllTracks_frames" ) project.shiftAllTracks_frames();
     
     
     //if ( cmd == "projDuration" ) { projectWasUpdated(); }
@@ -246,19 +250,19 @@ void testApp::processMenu( string cmd ) {
 }
 
 //--------------------------------------------------------------
-void testApp::playAll() {
+void ofApp::playAll() {
     project.playAll();
     b_play->setDown( false );
     b_play->setEnabled( false );
 }
 
 //--------------------------------------------------------------
-void testApp::playSegment() {
+void ofApp::playSegment() {
     project.playSegment();
 }
 
 //--------------------------------------------------------------
-void testApp::stop() {
+void ofApp::stop() {
     project.stop();
     b_playall->setDown( false );
     b_play->setDown( false );
@@ -266,7 +270,7 @@ void testApp::stop() {
 }
 
 //--------------------------------------------------------------
-void testApp::processButtons() {
+void ofApp::processButtons() {
     if ( b_stop->isPressed() ) { stop(); }
 
     if ( b_playall->isPressed() ) {
@@ -301,7 +305,7 @@ void testApp::processButtons() {
 }
 
 //--------------------------------------------------------------
-void testApp::processOscCommand( string cmd, vector<string> &values ) {
+void ofApp::processOscCommand( string cmd, vector<string> &values ) {
     cout << "Command: " << cmd << endl;
     for (int i=0; i<values.size(); i++) {
         cout << "\t" << values[i] << endl;
@@ -330,7 +334,7 @@ void testApp::processOscCommand( string cmd, vector<string> &values ) {
 }
 
 //--------------------------------------------------------------
-void testApp::processOsc() {
+void ofApp::processOsc() {
     //обработка OSC-сообщений
     while ( kus.oscIn.hasWaitingMessages() ) {
         ofxOscMessage m;
@@ -357,7 +361,7 @@ void testApp::processOsc() {
 
 
 //--------------------------------------------------------------
-void testApp::projectWasUpdated() {
+void ofApp::projectWasUpdated() {
     navi.setDuration( project.duration );
     navi.setSegment( project.time0(), project.time1() );
     
@@ -366,7 +370,7 @@ void testApp::projectWasUpdated() {
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 	ofBackground( 0 );
 
     project.draw();
@@ -409,7 +413,7 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
     if ( key == OF_KEY_RETURN ) { b_playall->setPressed(); }
     if ( key == ' ' ) { b_play->setPressed(); }
     if ( key == 'z' ) { b_edit->setDown( true ); }
@@ -423,7 +427,7 @@ void testApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
     if ( key == 'z' ) { b_edit->setDown( false ); }
     if ( key == 'x' ) { b_edit_line->setDown( false ); }
 
@@ -433,7 +437,7 @@ void testApp::keyReleased(int key){
 //обработка событий мыши
 //type 0 - move, 1 - press, 2 - drag, 3 - release
 //mouseState - указатель, использует ли кто-то мышь
-void testApp::mouse( int x, int y, int button, void *&mouseState, int type ) {
+void ofApp::mouse( int x, int y, int button, void *&mouseState, int type ) {
 	menu.mouse( x, y, button, mouseState, type );
     buttons.mouse( x, y, button, mouseState, type );
     navi.mouse( x, y, button, mouseState, type );
@@ -442,38 +446,38 @@ void testApp::mouse( int x, int y, int button, void *&mouseState, int type ) {
 
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ){
 	//mouse( x, y, 0, mouseState, 0 ); //пока выключил
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 	mouse( x, y, button, mouseState, 1 );
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 	mouse( x, y, button, mouseState, 2 );
 }
 
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 	mouse( x, y, button, mouseState, 3 );
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
     resized();
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
 
