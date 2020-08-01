@@ -784,6 +784,13 @@ void kusProject::deleteTrack() {
 }
 
 //---------------------------------------------------------------------
+void kusProject::keepIntPeaksOnly() { 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
+	for (int i = 0; i < tracks.size(); i++) {
+		tracks[i].keepIntPeaksOnly();
+	}
+}
+
+//---------------------------------------------------------------------
 void kusProject::editOscOut( int index ) { //редактировать OSC-выход
     kus.oscOut[ index ].setupFromDialog( "OSC out " + ofToString( index+1 ) + " (localhost 12345)" );
 }

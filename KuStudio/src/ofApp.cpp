@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.74)";
+string PRODUCT_NAME = "KuStudio (1.75)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -72,6 +72,9 @@ void ofApp::setup() {
 
 	menu.addItem("trDelete", "Delete track...", "tr");
 	menu.addItem("trEdit", "(For track drawing choose it and press Z)", "tr");
+
+	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
+	menu.addItem("trKeepIntPeaksOnly", "Keep peaks only at int tracks", "tr");
 
 	menu.addSubmenu("snd", "Sound");
 	menu.addItem("sndVolMute", "Mute", "snd");
@@ -248,6 +251,8 @@ void ofApp::processMenu(string cmd) {
 	if (cmd == "trSmooth") { project.editTrackSmooth(); }
 	if (cmd == "trType") { project.editTrackType(); }
 	if (cmd == "trDelete") { project.deleteTrack(); }
+	if (cmd == "trKeepIntPeaksOnly") { project.keepIntPeaksOnly(); projectWasUpdated(); }
+	
 
 	if (cmd == "sndVolMute") { project.setVolume(0); }
 	if (cmd == "sndVol10") { project.setVolume(0.10); }
@@ -332,10 +337,10 @@ void ofApp::processButtons() {
 
 //--------------------------------------------------------------
 void ofApp::processOscCommand(string cmd, vector<string> &values) {
-	cout << "Command: " << cmd << endl;
-	for (int i = 0; i < values.size(); i++) {
-		cout << "\t" << values[i] << endl;
-	}
+	//cout << "Command: " << cmd << endl;
+	//for (int i = 0; i < values.size(); i++) {
+	//	cout << "\t" << values[i] << endl;
+	//}
 
 	if (cmd == "playStopSegment") {
 		if (!project.isPlayingAll()) {

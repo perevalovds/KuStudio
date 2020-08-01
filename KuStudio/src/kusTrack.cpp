@@ -57,6 +57,19 @@ void kusTrack::shift_time_frames( int k ) {   //сдвиг влево на за�
 }
 
 //---------------------------------------------------------------------
+void kusTrack::keepIntPeaksOnly() {  	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
+	if (type_ != TYPE_INT) return;
+	int state = 0;
+	for (int i = 0; i < n_; i++) {
+		int v = (data_[i] > 0.5) ? 1 : 0;
+		if (v && state) {
+			data_[i] = 0;
+		}
+		state = v;
+	}
+}
+
+//---------------------------------------------------------------------
 void kusTrack::exportRawBinary( string fileName ) { //записать как массив float на диск
     if ( data_.size() > 0 ) {
         int n = data_.size();
@@ -256,12 +269,31 @@ void kusTrack::updateValue( float time ) { //выставить значение
     
     float indf = timeToIndexFloat( time );
     int ix0 = max( int( indf ), 0 );
+
     if ( ix0 >=0 && ix0 < n_ ) {
-        int ix1 = min( ix0+1, n_-1 );
-        if ( ix0 < ix1 ) {
-            value_ = ofMap( indf, ix0, ix1, data_[ix0], data_[ix1] );
-        }
-        else value_ = data_[ix0];
+		if (type_ == TYPE_INT) {
+			//смотрим интервал от прошлого события, чтобы не пропустить единичное событие,
+			//так как сканирование может пропускать отсчеты
+			if (last_ix0_ < ix0) {
+				int v = 0;
+				int scan = max(last_ix0_+1, ix0 - tracks_rate() / 2);	//TODO Параметр /2 - диапазон сканирования
+				for (int x = scan; x <= ix0; x++) {
+					v = max(v, data_[x] > 0.5?1:0);
+				}
+				value_ = v;
+			}
+			else {
+				value_ = (data_[ix0] > 0.5)?1:0;
+			}
+			last_ix0_ = ix0;
+		}
+		if (type_ == TYPE_FLOAT) {
+			int ix1 = min(ix0 + 1, n_ - 1);
+			if (ix0 < ix1) {
+				value_ = ofMap(indf, ix0, ix1, data_[ix0], data_[ix1]);
+			}
+			else value_ = data_[ix0];
+		}
     }
 }
 

@@ -120,6 +120,9 @@ void kuOscSend::sendFloat( string address, float value ) {
         m.setAddress( address );
         m.addFloatArg( value );
         sender_->sendMessage( m );
+
+		//cout << address << " " << value << endl;
+
     }
 }
 

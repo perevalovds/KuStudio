@@ -66,6 +66,7 @@ public:
     void editTrackSmooth();
     void editTrackType();
     void deleteTrack();
+	void keepIntPeaksOnly(); 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 	bool checkTrackSelected();	//выбран ли какой-то трек, если нет - предупредить
     
     void editOscOut( int index ); //редактировать OSC-выход
