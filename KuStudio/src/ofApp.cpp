@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.75)";
+string PRODUCT_NAME = "KuStudio (1.76)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -36,6 +36,9 @@ void ofApp::setup() {
 	ofSetWindowTitle(PRODUCT_NAME);
 	ofSetEscapeQuitsApp(false);   //выключили ESC
 	ofSetVerticalSync(false); //отключили вертикальную синхронизацию
+
+	//состояние
+	shared_state.setup();
 
 	float winw = ofGetWidth();
 	float winh = ofGetHeight();
@@ -95,6 +98,7 @@ void ofApp::setup() {
 	menu.addItem("settOscOut4", "OSC out 4", "sett");
 	menu.addItem("settOscIn", "OSC in", "sett");
 	menu.addItem("trRate", "(Tracks frame rate: " + ofToString(kusTrack::tracks_rate()) + " fps)", "sett");
+	menu.addItem("settFPS", "(App. frame rate: " + ofToString(shared_state.FPS) + " fps - settings.ini)", "sett");
 
 	menu.addSubmenu("help", "?");
 	menu.addItem("help", "Help...", "help");
@@ -125,7 +129,6 @@ void ofApp::setup() {
 
 
 	//состояние
-	shared_state.setup();
 	b_edit->setDown(false);
 	b_edit_line->setDown(false);
 	b_record->setDown(shared_state.recordButton);
