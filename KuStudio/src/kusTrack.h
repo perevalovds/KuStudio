@@ -12,10 +12,11 @@ public:
 
 	void setup();
     void exportRawBinary( string fileName ); //записать как массив float на диск
-    void shift_time_frames( int samples );   //сдвиг влево на заданное число кадров
-    void shift_time_sec( float sec );   //сдвиг влево на заданное число секунд
+    void shift_time_frames( int samples, bool only_fragment = false);   //сдвиг влево на заданное число кадров
+    void shift_time_sec( float sec, bool only_fragment = false);   //сдвиг влево на заданное число секунд
 	void keepIntPeaksOnly();  	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 
+	void uniformIntTrackFragment();  //Выровнять события int-трека
 
     void setPos( float x, float y, float w, float h );
     void setH( float h );

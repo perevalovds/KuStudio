@@ -202,7 +202,6 @@ void kusProject::shiftAllTracks_sec() { //сдвинуть все треки в�
             for (int i=0; i<tracks.size(); i++) {
                 tracks[i].shift_time_sec(v);
             }
-            tracksSetDirty();
         }
     }
 }
@@ -678,7 +677,7 @@ void kusProject::setViewSegment( float time0, float time1 ) {
 //---------------------------------------------------------------------
 string kusProject::timeString() {
     int seconds = int( time_ );
-    float frac = int((time_ - seconds) * 10);
+    float frac = int((time_ - seconds) * 100);
     int minutes = seconds / 60;
     seconds %= 60;
     
@@ -787,6 +786,39 @@ void kusProject::deleteTrack() {
 void kusProject::keepIntPeaksOnly() { 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 	for (int i = 0; i < tracks.size(); i++) {
 		tracks[i].keepIntPeaksOnly();
+	}
+}
+
+//---------------------------------------------------------------------
+void kusProject::shiftTrackFragment_sec() { //Сдвиг фрагмента выделенного трека, сек
+	if (checkTrackSelected()) {
+		string sec = systemTextBoxDialog("Shift selected track fragment by time (sec)", "0");
+		if (sec != "") {
+			float v = ofToFloat(sec);
+			if (v != 0) {
+				tracks[selectedTrack_].shift_time_sec(v, true);
+			}
+		}
+	}
+}
+
+//---------------------------------------------------------------------
+void kusProject::shiftTrackFragment_frames() { //Сдвиг фрагмента выделенного трека, frames
+	if (checkTrackSelected()) {
+		string sec = systemTextBoxDialog("Shift seleced track fragment by time (samples)", "0");
+		if (sec != "") {
+			int v = ofToInt(sec);
+			if (v != 0) {
+				tracks[selectedTrack_].shift_time_frames(v, true);
+			}
+		}
+	}
+}
+
+//---------------------------------------------------------------------
+void kusProject::uniformIntTrackFragment() {  //Выровнять события int-трека
+	if (checkTrackSelected()) {
+		tracks[selectedTrack_].uniformIntTrackFragment();
 	}
 }
 

@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.76)";
+string PRODUCT_NAME = "KuStudio (1.77)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -77,7 +77,14 @@ void ofApp::setup() {
 	menu.addItem("trEdit", "(For track drawing choose it and press Z)", "tr");
 
 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
-	menu.addItem("trKeepIntPeaksOnly", "Keep peaks only at int tracks", "tr");
+	menu.addItem("trKeepIntPeaksOnly", "Keep peaks only at all int tracks", "tr");
+
+	menu.addItem("trShiftTrack_sec", "Shift track fragment, seconds...", "tr");
+	menu.addItem("trShiftTrack_frames", "Shift track fragment, frames...", "tr");
+
+	//выравнивает растояния между событиями во фрагменте
+	menu.addItem("trUniformFragment", "Make uniform events at int track fragment", "tr");
+
 
 	menu.addSubmenu("snd", "Sound");
 	menu.addItem("sndVolMute", "Mute", "snd");
@@ -254,8 +261,11 @@ void ofApp::processMenu(string cmd) {
 	if (cmd == "trSmooth") { project.editTrackSmooth(); }
 	if (cmd == "trType") { project.editTrackType(); }
 	if (cmd == "trDelete") { project.deleteTrack(); }
-	if (cmd == "trKeepIntPeaksOnly") { project.keepIntPeaksOnly(); projectWasUpdated(); }
-	
+	if (cmd == "trKeepIntPeaksOnly") { project.keepIntPeaksOnly(); }
+
+	if (cmd == "trShiftTrack_sec") { project.shiftTrackFragment_sec(); }
+	if (cmd == "trShiftTrack_frames") { project.shiftTrackFragment_frames(); }
+	if (cmd == "trUniformFragment") { project.uniformIntTrackFragment(); }	
 
 	if (cmd == "sndVolMute") { project.setVolume(0); }
 	if (cmd == "sndVol10") { project.setVolume(0.10); }
@@ -405,7 +415,7 @@ void ofApp::projectWasUpdated() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	ofBackground(0);
+	ofBackground(64);
 
 	project.draw();
 

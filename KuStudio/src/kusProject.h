@@ -66,8 +66,12 @@ public:
     void editTrackSmooth();
     void editTrackType();
     void deleteTrack();
-	void keepIntPeaksOnly(); 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 	bool checkTrackSelected();	//выбран ли какой-то трек, если нет - предупредить
+
+	void keepIntPeaksOnly(); 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
+	void shiftTrackFragment_sec(); //Сдвиг фрагмента выделенного трека, сек
+	void shiftTrackFragment_frames(); //Сдвиг фрагмента выделенного трека, frames
+	void uniformIntTrackFragment();  //Выровнять события int-трека
     
     void editOscOut( int index ); //редактировать OSC-выход
     void editPlayerOut( int index ); //редактировать OSC-выход на kuPlayer
