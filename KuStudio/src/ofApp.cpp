@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.77)";
+string PRODUCT_NAME = "KuStudio (1.78)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -76,14 +76,14 @@ void ofApp::setup() {
 	menu.addItem("trDelete", "Delete track...", "tr");
 	menu.addItem("trEdit", "(For track drawing choose it and press Z)", "tr");
 
-	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
-	menu.addItem("trKeepIntPeaksOnly", "Keep peaks only at all int tracks", "tr");
-
 	menu.addItem("trShiftTrack_sec", "Shift track fragment, seconds...", "tr");
 	menu.addItem("trShiftTrack_frames", "Shift track fragment, frames...", "tr");
 
+	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
+	menu.addItem("trKeepIntPeaksOnly", "Keep peaks only at all int tracks", "tr");
+
 	//выравнивает растояния между событиями во фрагменте
-	menu.addItem("trUniformFragment", "Make uniform events at int track fragment", "tr");
+	menu.addItem("trUniformFragment", "Make uniform events at int track fragment (Shift+U)", "tr");
 
 
 	menu.addSubmenu("snd", "Sound");
@@ -462,6 +462,10 @@ void ofApp::keyPressed(int key) {
 	if (key == ' ') { b_play->setPressed(); }
 	if (key == 'z') { b_edit->setDown(true); }
 	if (key == 'x') { b_edit_line->setDown(true); }
+
+	if (key == 'U') { //выравнивание событий на треке
+		processMenu("trUniformFragment");
+	}
 
 	//    bool ctrl = ofGetKeyPressed(OF_KEY_CONTROL);
 	//    cout << "ctrl " << ctrl << endl;
