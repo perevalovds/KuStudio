@@ -71,7 +71,11 @@ public:
 	void keepIntPeaksOnly(); 	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 	void shiftTrackFragment_sec(); //Сдвиг фрагмента выделенного трека, сек
 	void shiftTrackFragment_frames(); //Сдвиг фрагмента выделенного трека, frames
-	void uniformIntTrackFragment();  //Выровнять события int-трека
+	
+	//Если n >= 0 - создать n событий во фрагменте int между двумя крайниими событиями.
+	//Если n == -1 - то посчитать, сколько событий внутри, и поставить столько - то есть просто выровнять
+	void uniformIntTrackFragment(int n = -1);
+	void uniformIntTrackFragmentSpecify();	//запросить число событий и выровнять
     
     void editOscOut( int index ); //редактировать OSC-выход
     void editPlayerOut( int index ); //редактировать OSC-выход на kuPlayer

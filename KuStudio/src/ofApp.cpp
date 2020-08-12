@@ -9,7 +9,7 @@
 #include "kuButton.h"
 #include "kuConsole.h"
 
-string PRODUCT_NAME = "KuStudio (1.78)";
+string PRODUCT_NAME = "KuStudio (1.79)";
 
 kuMenu menu;
 kuNavigator navi;
@@ -84,6 +84,8 @@ void ofApp::setup() {
 
 	//выравнивает растояния между событиями во фрагменте
 	menu.addItem("trUniformFragment", "Make uniform events at int track fragment (Shift+U)", "tr");
+	//создание равномерных событий на фрагменте трека - можно делать для 1-го трека и затем расставлять ниже
+	menu.addItem("trUniformFragmentSpec", "Fill by specified number of events at fragment (U)...", "tr");
 
 
 	menu.addSubmenu("snd", "Sound");
@@ -266,6 +268,8 @@ void ofApp::processMenu(string cmd) {
 	if (cmd == "trShiftTrack_sec") { project.shiftTrackFragment_sec(); }
 	if (cmd == "trShiftTrack_frames") { project.shiftTrackFragment_frames(); }
 	if (cmd == "trUniformFragment") { project.uniformIntTrackFragment(); }	
+	if (cmd == "trUniformFragmentSpec") { project.uniformIntTrackFragmentSpecify(); }
+	
 
 	if (cmd == "sndVolMute") { project.setVolume(0); }
 	if (cmd == "sndVol10") { project.setVolume(0.10); }
@@ -463,8 +467,11 @@ void ofApp::keyPressed(int key) {
 	if (key == 'z') { b_edit->setDown(true); }
 	if (key == 'x') { b_edit_line->setDown(true); }
 
-	if (key == 'U') { //выравнивание событий на треке
+	if (key == 'U') { //выравнивание событий на фрагменте трека
 		processMenu("trUniformFragment");
+	}
+	if (key == 'u') { //создание равномерных событий на фрагменте трека - можно делать для 1-го трека и затем расставлять ниже
+		processMenu("trUniformFragmentSpec");
 	}
 
 	//    bool ctrl = ofGetKeyPressed(OF_KEY_CONTROL);

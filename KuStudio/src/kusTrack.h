@@ -16,7 +16,7 @@ public:
     void shift_time_sec( float sec, bool only_fragment = false);   //сдвиг влево на заданное число секунд
 	void keepIntPeaksOnly();  	//Конвертирует продолжительные пики на int-треках в один отсчет - удобно для редактирования событий
 
-	void uniformIntTrackFragment();  //Выровнять события int-трека
+	void uniformIntTrackFragment(int n = -1);  //создать n событий int-трека между крайними событиями. Если n=-1 - выровнять имеющиуся события 
 
     void setPos( float x, float y, float w, float h );
     void setH( float h );

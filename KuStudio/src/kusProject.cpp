@@ -816,10 +816,24 @@ void kusProject::shiftTrackFragment_frames() { //Сдвиг фрагмента �
 }
 
 //---------------------------------------------------------------------
-void kusProject::uniformIntTrackFragment() {  //Выровнять события int-трека
+void kusProject::uniformIntTrackFragment(int n) {  //Выровнять события int-трека
 	if (checkTrackSelected()) {
-		tracks[selectedTrack_].uniformIntTrackFragment();
+		tracks[selectedTrack_].uniformIntTrackFragment(n);
 	}
+}
+
+//---------------------------------------------------------------------
+void kusProject::uniformIntTrackFragmentSpecify() {	//запросить число событий и выровнять
+	if (checkTrackSelected()) {
+		string value = systemTextBoxDialog("How much events", "2");
+		if (value != "") {
+			int n = ofToInt(value);
+			if (n >= -1) {
+				uniformIntTrackFragment(n);
+			}
+		}
+	}
+
 }
 
 //---------------------------------------------------------------------
