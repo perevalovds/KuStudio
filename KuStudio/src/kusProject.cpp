@@ -825,7 +825,7 @@ void kusProject::uniformIntTrackFragment(int n) {  //Выровнять собы
 //---------------------------------------------------------------------
 void kusProject::uniformIntTrackFragmentSpecify() {	//запросить число событий и выровнять
 	if (checkTrackSelected()) {
-		string value = systemTextBoxDialog("How much events", "2");
+		string value = systemTextBoxDialog("How much events", "");
 		if (value != "") {
 			int n = ofToInt(value);
 			if (n >= -1) {
